@@ -1,0 +1,32 @@
+IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'tableDate'))
+BEGIN
+    DROP TABLE tableDate
+END
+GO
+
+CREATE TABLE [dbo].[tableDate]
+(
+    [Time_id] INT PRIMARY KEY, 
+    [FullDate] CHAR(10) -- Date in MM-dd-yyyy format
+)
+GO
+
+-- Specify Start Date and End date here
+-- Value of Start Date Must be Less than Your End Date 
+
+DECLARE @StartDate DATETIME = '2017-01-01' -- Starting value of Date Range
+DECLARE @EndDate DATETIME = '2019-01-01' -- End Value of Date Range
+
+-- Populate the table with data based on the date range
+DECLARE @CurrentDate DATETIME = @StartDate
+
+WHILE @CurrentDate <= @EndDate
+BEGIN
+    INSERT INTO [dbo].[tableDate] ([Time_id], [FullDate])
+    VALUES (CONVERT(INT, FORMAT(@CurrentDate, 'yyyyMMdd')), CONVERT(CHAR(10), @CurrentDate, 110))
+
+    SET @CurrentDate = DATEADD(DAY, 1, @CurrentDate)
+END
+
+-- Select data from the table
+SELECT * FROM [dbo].[tableDate]
